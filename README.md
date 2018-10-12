@@ -2,7 +2,7 @@
 
 HCLogger is a logging module using [Termcolor](https://pypi.org/project/termcolor/) and a hierarchical format to improve readability.
 
-Note: this module was implemented to deal with concurrency. However, it is encouraged to store threads logs into a different log files.
+Note: this module was designed to deal with concurrency. However, it is encouraged to store thread logs into different log files.
 
 ![HCLogger capture](hclogger/tests/function_test.png)
 
