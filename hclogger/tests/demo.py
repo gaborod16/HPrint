@@ -5,7 +5,7 @@ import random
 
 sys.path.append("..")
 
-from hprint import Logger
+from hclogger import Logger
 
 logger = Logger(filename='demo.log', verbose=False)
 

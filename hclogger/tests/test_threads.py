@@ -2,7 +2,7 @@ import sys
 import threading
 sys.path.append("..")
 
-from hprint import Logger
+from hclogger import Logger
 
 def feedback(l, tn):
 	prefix = '[id={}]'.format(tn)

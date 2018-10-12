@@ -6,7 +6,7 @@ import termcolor
 sys.path.append("..")
 
 from termcolor import colored
-from hprint import Logger
+from hclogger import Logger
 
 def feedback(l):
 	l.info('This is a manual logged function')
