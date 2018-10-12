@@ -1,8 +1,9 @@
 import timeit
+import datetime
 import termcolor
 
+from datetime import datetime
 from termcolor import colored
-from colorama import init
 from enum import Enum
 
 class Color(Enum):
@@ -26,7 +27,7 @@ class Style(Enum):
 class Logger(object):
 	"""docstring for Logger"""
 
-	hierarchy = 0
+	_hierarchy = 0
 
 	# Colors
 	colors = {}
@@ -42,15 +43,15 @@ class Logger(object):
 
 	@classmethod
 	def raiseHierarchy(cls):
-		cls.hierarchy += 1
+		cls._hierarchy += 1
 
 	@classmethod
 	def dropHierarchy(cls):
-		cls.hierarchy -= 1
+		cls._hierarchy -= 1
 
 	@classmethod
 	def getHierarchy(cls):
-		return cls.hierarchy
+		return cls._hierarchy
 
 	def __init__(self, verbose=True, filename=None):
 		super(Logger, self).__init__()
@@ -75,10 +76,13 @@ class Logger(object):
 
 	def _print(self, header='', message='', raw_text=''):
 		hierarchy_tabs = '\t'*Logger.getHierarchy()
-		self._write_log(hierarchy_tabs + raw_text)
-		outputs = [header + message]
+		date_str = datetime.now().strftime("%Y-%m-%d %H:%M - ")
+		self._write_log(hierarchy_tabs + date_str + raw_text)
+
+		outputs = [date_str + header + message] if self.verbose else [header + message]
 
 		while len(outputs[-1]) + len(hierarchy_tabs) > self.max_line_len:
+			print(outputs[-1])
 			outputs += self._split_text(outputs.pop())
 		[print('{}.{}'.format(hierarchy_tabs, o)) for o in outputs]
 
@@ -89,7 +93,9 @@ class Logger(object):
 		return [text[:index], text[index+1:]]
 
 	def _find_index(self, iindex, indexes):
-		if indexes[iindex] <= self.max_line_len:
+		if iindex == len(indexes) - 1:
+			return indexes[iindex]
+		elif indexes[iindex] <= self.max_line_len:
 			return self._find_index(iindex+1, indexes)
 		else:
 			return indexes[iindex-1]
