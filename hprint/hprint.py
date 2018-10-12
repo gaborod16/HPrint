@@ -59,25 +59,26 @@ class Logger(object):
 
 	@classmethod
 	def get_hierarchy(cls):
-		return cls._hierarchy
+		with cls._hierarchy_lock:
+			return cls._hierarchy
 
 	@classmethod
 	def _get_file_lock(cls, filename):
 		return cls._filename_locks.setdefault(filename, threading.Lock())
 
-	def __init__(self, verbose=True, filename=None):
+	def __init__(self, filename='hclogger.log', verbose=True):
 		super(Logger, self).__init__()
 		self.verbose = verbose
 		self.filename = filename
 		self.file_lock = Logger._get_file_lock(filename)
 		self.max_line_len = 80
 
-	def decorate_log(self, func):
+	def log_func(self, func):
 		def wrapper(*args, **kwargs):
-			return self.log_operation(func, *args, **kwargs)
+			return self.manual_log_func(func, *args, **kwargs)
 		return wrapper
 
-	def log_operation(self, func, *args, **kwargs):
+	def manual_log_func(self, func, *args, **kwargs):
 		self.begin(func.__name__)
 		start_time = timeit.default_timer()
 
@@ -89,15 +90,14 @@ class Logger(object):
 
 	def _print(self, header='', message='', raw_text=''):
 		hierarchy_tabs = '\t'*Logger.get_hierarchy()
-		date_str = datetime.now().strftime("%Y-%m-%d %H:%M - ")
+		date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S - ")
 		self._write_log(hierarchy_tabs + date_str + raw_text)
 
 		outputs = [date_str + header + message] if self.verbose else [header + message]
 
 		while len(outputs[-1]) + len(hierarchy_tabs) > self.max_line_len:
-			print(outputs[-1])
 			outputs += self._split_text(outputs.pop())
-		[print('{}.{}'.format(hierarchy_tabs, o)) for o in outputs]
+		[print('{}{}'.format(hierarchy_tabs, o)) for o in outputs]
 
 	def _split_text(self, text):
 		''' This function turns a text multiline while respecting the hierarchy format '''
