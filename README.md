@@ -20,6 +20,8 @@ from HCLogger import Logger
 logger = Logger(filename='fname.log', verbose=False)
 logger.debug('This is a debug message.')
 ```
+
+Output: 
 ![Debug output](hclogger/tests/debug_message.png)
 
 The hierarchy is added to functions. In order to add hierarchy on of the following alternatives must be used:
@@ -36,6 +38,7 @@ def func(args):
 func()
 ```
 
+Output:
 ![Function logging](hclogger/tests/function_log.png)
 
 Putting it all together:
