@@ -1,6 +1,7 @@
 import timeit
 import datetime
 import termcolor
+import threading
 
 from datetime import datetime
 from termcolor import colored
@@ -27,7 +28,12 @@ class Style(Enum):
 class Logger(object):
 	"""docstring for Logger"""
 
+	# Shared variables
+	_hierarchy_lock = threading.Lock()
 	_hierarchy = 0
+
+	# Add lock by filename to log to
+	_filename_locks = {}
 
 	# Colors
 	colors = {}
@@ -42,21 +48,28 @@ class Logger(object):
 	colors['high'] = Color.MAGENTA.value
 
 	@classmethod
-	def raiseHierarchy(cls):
-		cls._hierarchy += 1
+	def raise_hierarchy(cls):
+		with cls._hierarchy_lock:
+			cls._hierarchy += 1
 
 	@classmethod
-	def dropHierarchy(cls):
-		cls._hierarchy -= 1
+	def drop_hierarchy(cls):
+		with cls._hierarchy_lock:
+			cls._hierarchy -= 1
 
 	@classmethod
-	def getHierarchy(cls):
+	def get_hierarchy(cls):
 		return cls._hierarchy
+
+	@classmethod
+	def _get_file_lock(cls, filename):
+		return cls._filename_locks.setdefault(filename, threading.Lock())
 
 	def __init__(self, verbose=True, filename=None):
 		super(Logger, self).__init__()
 		self.verbose = verbose
 		self.filename = filename
+		self.file_lock = Logger._get_file_lock(filename)
 		self.max_line_len = 80
 
 	def decorate_log(self, func):
@@ -75,7 +88,7 @@ class Logger(object):
 		return results
 
 	def _print(self, header='', message='', raw_text=''):
-		hierarchy_tabs = '\t'*Logger.getHierarchy()
+		hierarchy_tabs = '\t'*Logger.get_hierarchy()
 		date_str = datetime.now().strftime("%Y-%m-%d %H:%M - ")
 		self._write_log(hierarchy_tabs + date_str + raw_text)
 
@@ -101,17 +114,18 @@ class Logger(object):
 			return indexes[iindex-1]
 
 	def _write_log(self, text):
-		with open(self.filename, 'a+') as f:
-			f.write(text + '\n')
+		with self.file_lock:
+			with open(self.filename, 'a+') as f:
+				f.write(text + '\n')
 
 	def begin(self, message):
 		message = '<{}>'.format(message)
 		header = 'Task: '
 		self._print(colored(header, Logger.colors['begin'], attrs=Style.BOLD.value), message, header+message)
-		Logger.raiseHierarchy()
+		Logger.raise_hierarchy()
 
 	def end(self, message):
-		Logger.dropHierarchy()
+		Logger.drop_hierarchy()
 		message = '{}\n'.format(message)
 		header = 'Done processing '
 		self._print(colored(header, Logger.colors['end']), message, header+message)
