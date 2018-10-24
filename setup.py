@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hclogger",
-    version="1.0.3",
+    version="1.0.4",
     author="Gabriel Amarista",
     author_email="gaborod16@gmail.com",
     description="A hierarchical and colourful logging module",
