@@ -7,8 +7,9 @@ Note: this module was designed to deal with concurrency. However, it is encourag
 ![HCLogger capture](https://raw.githubusercontent.com/gaborod16/HCLogger/master/hclogger/tests/function_test.png)
 
 ### Installation
-
+```bash
 pip install hclogger
+```
 
 ### Usage
 
