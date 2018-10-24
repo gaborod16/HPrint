@@ -8,7 +8,7 @@ Note: this module was designed to deal with concurrency. However, it is encourag
 
 ### Installation
 
-Not yet in PyPi.
+pip install hclogger
 
 ### Usage
 
