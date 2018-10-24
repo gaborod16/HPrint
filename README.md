@@ -49,5 +49,5 @@ Putting it all together:
 
 ## Future work
 
- - [ ] Add to PyPi
+ - [x] Add to PyPi
  - [ ] Create web view
