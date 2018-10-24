@@ -4,7 +4,7 @@ HCLogger is a logging module using [Termcolor](https://pypi.org/project/termcolo
 
 Note: this module was designed to deal with concurrency. However, it is encouraged to store thread logs into different log files.
 
-![HCLogger capture](https://github.com/gaborod16/HCLogger/blob/master/hclogger/tests/function_test.png)
+![HCLogger capture](https://raw.githubusercontent.com/gaborod16/HCLogger/master/hclogger/tests/function_test.png)
 
 ### Installation
 
@@ -23,7 +23,7 @@ logger.debug('This is a debug message.')
 
 Output:
 
-![Debug output](https://github.com/gaborod16/HCLogger/blob/master/hclogger/tests/debug_message.png)
+![Debug output](https://raw.githubusercontent.com/gaborod16/HCLogger/master/hclogger/tests/debug_message.png)
 
 The hierarchy is added to functions. In order to add hierarchy on of the following alternatives must be used:
 
@@ -41,11 +41,11 @@ func()
 
 Output:
 
-![Function logging](https://github.com/gaborod16/HCLogger/blob/master/hclogger/tests/function_log.png)
+![Function logging](https://raw.githubusercontent.com/gaborod16/HCLogger/master/hclogger/tests/function_log.png)
 
 Putting it all together:
 
-![Demo capture](https://github.com/gaborod16/HCLogger/blob/master/hclogger/tests/demo_capture.png)
+![Demo capture](https://raw.githubusercontent.com/gaborod16/HCLogger/master/hclogger/tests/demo_capture.png)
 
 ## Future work
 
